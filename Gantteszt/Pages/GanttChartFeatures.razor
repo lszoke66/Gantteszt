@@ -1,0 +1,93 @@
+﻿@page "/ganttchart-features"
+@using Syncfusion.Blazor.Gantt
+@using Data
+@using Models
+@using Syncfusion.Blazor.Data
+<h2>Gantt Chart</h2>
+<br/>
+
+    <SfGantt Height="1000px" Width="100%" TValue="GanttAdat" ProjectStartDate="@ProjectStart" AllowRowDragAndDrop=true ProjectEndDate="@ProjectEnd" AllowFiltering="true" EnableContextMenu="true"
+              Toolbar="@(new List<string>() { "NextTimeSpan", "PrevTimeSpan", "Search", "Add", "Cancel", "Delete", "Edit", "Update", "ZoomIn","ZoomOut","ZoomToFit"  })">
+        
+                                                              <SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor" ></SfDataManager>
+
+                  <GanttTaskFields Id="TaskId" Name="TaskName" StartDate="StartDate" EndDate="EndDate"
+                         Duration="Duration" Progress="Progress" Dependency="Predecessor" ParentID="ParentId">
+        </GanttTaskFields>
+        <GanttEditSettings AllowEditing="true" AllowTaskbarEditing="true" AllowAdding="true" AllowDeleting="true" ShowDeleteConfirmDialog="true"></GanttEditSettings>
+	<GanttSearchSettings Fields="@Searchfields"></GanttSearchSettings> 
+           
+        <GanttTimelineSettings TimelineUnitSize="@DefaultUnitWidth">
+            <GanttTopTierSettings Unit="@TopTierUnit" Count="@TopTierCount" Format="@TopTierFormat"></GanttTopTierSettings>
+            <GanttBottomTierSettings Count="@BottomTierCount" Unit="@BottomTierUnit" Format="@BottomTierFormat"></GanttBottomTierSettings>
+        </GanttTimelineSettings>
+    </SfGantt>
+
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Zooming</li>
+      <li class="list"> Editing</li>
+      <li class="list"> Filtering</li>
+      <li class="list"> Timeline</li>
+      <li class="list"> Theme - Fluent</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code{
+    public DateTime ProjectStart = new DateTime(2023, 4, 1);
+    public DateTime ProjectEnd = new DateTime(2023, 12, 4);
+    
+    
+    public int DefaultUnitWidth = 33;
+    public int TopTierCount = 1;
+    public int BottomTierCount = 1;
+    TimelineViewMode TopTierUnit = TimelineViewMode.Week;
+    TimelineViewMode BottomTierUnit = TimelineViewMode.Day;
+    string TopTierFormat = "MMM dd, yyyy";
+    string BottomTierFormat = "";
+    public string[] Searchfields = new string[] { "TaskId", "TaskName", "StartDate", "EndDate", "Duration", "Progress", "Predecessor" };
+    
+
+    public class CustomAdaptor : DataAdaptor
+    {
+             
+        TesztContext db = new TesztContext();
+        public override object Read(DataManagerRequest dm, string key = null)
+        {
+            IEnumerable<GanttAdat> DataSource = db.GanttAdat.Where(x => x.FejCsatolo == 37);
+
+
+            int count = DataSource.Cast<GanttAdat>().Count();
+
+
+            return dm.RequiresCounts ? new DataResult()
+                { Result = DataSource, Count = count } : (object)DataSource;
+        }
+
+
+
+    
+
+    }
+
+
+
+
+
+   
+}
