@@ -49,7 +49,7 @@ builder.Services.AddDbContext<TesztContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTQzNjMxNUAzMjMxMmUzMTJlMzMzNWlHVEh0T29VOHArOWNQaHBMUlZROWszb0UyOTVvYTR2ZmZCbEt4U0RKQzA9");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
